@@ -2,18 +2,14 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from PIL import Image
 
-from user.managers import UserManager
-
 
 class User(AbstractUser):
     email = models.EmailField("email address", unique=True)
     bio = models.CharField("basic info", max_length=255, null=True, blank=True)
-    avatar = models.ImageField(default="default.png", upload_to="avatars")
+    avatar = models.ImageField(default="default.png", upload_to="avatars", blank=True)
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
-
-    objects = UserManager()
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email"]
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
