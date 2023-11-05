@@ -4,7 +4,7 @@
     <img class="rounded-circle article-img" src="{{ object.author.avatar.url }}">
     <div class="media-body">
       <div class="article-metadata">
-        <a class="mr-2" href="#">{{ object.author }}</a>
+        <p class="mr-2" >{{ object.author }}</p>
         <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
         {% if object.author == user %}
           <div>
@@ -14,7 +14,7 @@
         {% endif %}
       </div>
       <h2 class="article-title">{{ object.title }}</h2>
-      <p class="article-content">{{ object.content }}</p>
+      <p class="article-content">{{ object.content | markdown | safe }}</p>
     </div>
   </article>
 {% endblock content %}
