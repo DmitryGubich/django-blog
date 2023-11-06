@@ -11,9 +11,9 @@ from blog.views import (
 
 urlpatterns = [
     path("", PostListView.as_view(), name="home"),
-    path("post/<int:pk>/", PostDetailView.as_view(), name="post-detail"),
     path("post/create/", PostCreateView.as_view(), name="post-create"),
-    path("post/<int:pk>/update/", PostUpdateView.as_view(), name="post-update"),
-    path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post-delete"),
+    path("post/<slug:slug>/", PostDetailView.as_view(), name="post-detail"),
+    path("post/<slug:slug>/update/", PostUpdateView.as_view(), name="post-update"),
+    path("post/<slug:slug>/delete/", PostDeleteView.as_view(), name="post-delete"),
     path("about/", about, name="about"),
 ]
