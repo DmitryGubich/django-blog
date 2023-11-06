@@ -56,11 +56,13 @@
         </div>
         <div class="col-md-4">
           <div class="content-section">
-            <h3>Sections</h3>
+            <h3>Popular tags</h3>
             <ul class="list-group">
-            <li class="list-group-item list-group-item-light">Music</li>
-            <li class="list-group-item list-group-item-light">Programming</li>
-            <li class="list-group-item list-group-item-light">Martial arts</li>
+            {% for tag in tags.all %}
+                <li class="list-group-item list-group-item-light">
+                    <a href="{% url 'tagged' tag.slug %}">{{tag | lower}}</a>
+                </li>
+            {% endfor %}
             </ul>
           </div>
         </div>

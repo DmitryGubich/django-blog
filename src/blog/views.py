@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -7,6 +7,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from taggit.models import Tag
 
 from blog.models import Post
 
@@ -18,14 +19,24 @@ class PostListView(ListView):
     ordering = ["-date_posted"]
     paginate_by = 5
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tags"] = Post.tags.most_common()[:3]
+        return context
+
 
 class PostDetailView(DetailView):
     model = Post
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tags"] = Post.tags.most_common()[:3]
+        return context
+
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ["title", "content"]
+    fields = ["title", "content", "tags"]
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -34,7 +45,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ["title", "content"]
+    fields = ["title", "content", "tags"]
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -56,6 +67,17 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author:
             return True
         return False
+
+
+def tagged(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    posts = Post.objects.filter(tags=tag)
+
+    context = {
+        "tags": Post.tags.most_common()[:3],
+        "posts": posts,
+    }
+    return render(request, "blog/home.html", context)
 
 
 def about(request):

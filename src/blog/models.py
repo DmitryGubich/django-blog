@@ -3,6 +3,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
+from taggit.managers import TaggableManager
 
 from blog.utils import validate_title
 
@@ -15,6 +16,7 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, blank=True)
+    tags = TaggableManager()
 
     def save(self, *args, **kwargs):
         if not self.slug:
