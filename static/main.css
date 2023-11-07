@@ -116,3 +116,11 @@ footer a:hover {
   color:#777;
   text-decoration: none;
 }
+
+.btn {
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}

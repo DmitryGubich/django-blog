@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -30,7 +32,13 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        post = get_object_or_404(Post, slug=self.kwargs["slug"])
         context["tags"] = Post.tags.most_common()[:3]
+        liked = False
+        if post.likes.filter(id=self.request.user.id).exists():
+            liked = True
+        context["number_of_likes"] = post.number_of_likes
+        context["post_is_liked"] = liked
         return context
 
 
@@ -69,6 +77,16 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 
+def like_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+
+    return HttpResponseRedirect(reverse("post-detail", args=[slug]))
+
+
 def tagged(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     posts = Post.objects.filter(tags=tag)
@@ -81,4 +99,8 @@ def tagged(request, slug):
 
 
 def about(request):
-    return render(request, "blog/about.html", {"title": "About"})
+    context = {
+        "title": "About",
+        "tags": Post.tags.most_common()[:3],
+    }
+    return render(request, "blog/about.html", context)
