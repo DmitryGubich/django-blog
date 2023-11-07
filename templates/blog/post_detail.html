@@ -27,17 +27,19 @@
                 <form action="{% url 'like-post' object.slug %}" method="POST">
                     {% csrf_token %}
                     {% if post_is_liked %}
-                        <button class="btn">
+                        <button class="custom-btn">
                             <i class="bi bi-heart-fill"></i>
                         </button>
                     {% else %}
-                        <button class="btn">
+                        <button class="custom-btn">
                             <i class="bi bi-heart"></i>
                         </button>
                     {% endif %}
                 </form>
             {% endif %}
-            <p class="text-secondary">{{ number_of_likes }} Like{{ number_of_likes | pluralize }}</p>
+            <small class="text-secondary">
+                {{ number_of_likes }} Like{{ number_of_likes | pluralize }}
+            </small>
         </div>
     </article>
 {% endblock content %}

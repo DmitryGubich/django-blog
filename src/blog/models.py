@@ -16,12 +16,11 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, blank=True)
-    likes = models.ManyToManyField(User, related_name="post_likes")
+    likes = models.ManyToManyField(User, related_name="liked_posts")
     tags = TaggableManager()
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
+        self.slug = slugify(self.title)
         return super().save(*args, **kwargs)
 
     @property

@@ -8,6 +8,7 @@ from blog.views import (
     PostUpdateView,
     about,
     like_post,
+    liked_posts,
     tagged,
 )
 
@@ -19,5 +20,6 @@ urlpatterns = [
     path("post/<slug:slug>/delete/", PostDeleteView.as_view(), name="post-delete"),
     path("tag/<slug:slug>/", tagged, name="tagged"),
     path("like-post/<slug:slug>/", like_post, name="like-post"),
+    path("liked/", liked_posts, name="liked"),
     path("about/", about, name="about"),
 ]

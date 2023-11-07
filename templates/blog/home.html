@@ -17,11 +17,13 @@
                     {% endfor %}
                 </p>
                 <p class="article-content">{{ post.content | markdown | safe }}</p>
-                <p class="text-secondary">
+                <small class="text-secondary">
                     {{ post.number_of_likes }} Like{{ post.number_of_likes | pluralize }}
-                </p>
+                </small>
             </div>
         </article>
+    {% empty %}
+        <h2>There are no posts yet :(</h2>
     {% endfor %}
     <div class="pagination justify-content-center">
         {% if is_paginated %}

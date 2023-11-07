@@ -53,7 +53,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ["title", "content", "tags"]
+    fields = ["title", "content", "tags", "slug"]
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -85,6 +85,14 @@ def like_post(request, slug):
         post.likes.add(request.user)
 
     return HttpResponseRedirect(reverse("post-detail", args=[slug]))
+
+
+def liked_posts(request):
+    context = {
+        "tags": Post.tags.most_common()[:3],
+        "posts": request.user.liked_posts.all(),
+    }
+    return render(request, "blog/home.html", context)
 
 
 def tagged(request, slug):
