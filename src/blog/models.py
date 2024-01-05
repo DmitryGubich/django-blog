@@ -15,13 +15,9 @@ class Post(models.Model):
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField()
     likes = models.ManyToManyField(User, related_name="liked_posts")
     tags = TaggableManager()
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        return super().save(*args, **kwargs)
 
     @property
     def number_of_likes(self):

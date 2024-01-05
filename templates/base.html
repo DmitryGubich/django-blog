@@ -15,6 +15,7 @@
               rel='stylesheet'
               type='text/css'>
         <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
         <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css'
               rel='stylesheet'>
         <title>{{ title }}</title>
@@ -56,24 +57,11 @@
         </header>
         <main role="main" class="container">
             <div class="row">
-                <div class="col-md-8">
-                    {% if messages %}
-                        {% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}
-                    {% endif %}
-                    {% block content %}{% endblock %}
-                </div>
-                <div class="col-md-4">
-                    <div class="content-section">
-                        <h3>Popular tags</h3>
-                        <ul class="list-group">
-                            {% for tag in tags.all %}
-                                <li class="list-group-item list-group-item-light">
-                                    <a href="{% url 'tagged' tag.slug %}">{{ tag | lower }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
+                {% if messages %}
+                    {% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}
+                {% endif %}
+                {% block content %}{% endblock %}
+                {% block popular_tags %}{% endblock %}
             </div>
         </main>
         <footer class="text-center bg-dark">
