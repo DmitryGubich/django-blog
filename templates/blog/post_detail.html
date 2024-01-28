@@ -1,4 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
+{% load martortags %}
+
+{% block css %}
+  <link href="{% static 'plugins/css/ace.min.css' %}" type="text/css" media="all" rel="stylesheet" />
+  <link href="{% static 'martor/css/martor.bootstrap.min.css' %}" type="text/css" media="all" rel="stylesheet" />
+{% endblock %}
+
 {% block content %}
     <div class="col-md-12">
         <article class="media content-section">
@@ -18,12 +26,13 @@
                     {% endif %}
                 </div>
                 <h2 class="article-title">{{ object.title }}</h2>
-                <p class="text-muted">Tags:
+                <p class="text-muted">
+                    Tags:
                     {% for tag in post.tags.all %}
                         <a href="{% url 'tagged' tag.slug %}" class="mr-1 badge badge-info">{{ tag | lower }}</a>
                     {% endfor %}
                 </p>
-                <p class="article-content">{{ object.content | render_markdown }}</p>
+                <p class="article-content">{{ object.content|safe_markdown }}</p>
                 {% if user.is_authenticated %}
                     <form action="{% url 'like-post' object.slug %}" method="POST">
                         {% csrf_token %}
@@ -38,10 +47,17 @@
                         {% endif %}
                     </form>
                 {% endif %}
-                <small class="text-secondary">
-                    {{ number_of_likes }} Like{{ number_of_likes | pluralize }}
-                </small>
+                <small class="text-secondary">{{ number_of_likes }} Like{{ number_of_likes | pluralize }}</small>
             </div>
         </article>
     </div>
 {% endblock content %}
+
+{% block js %}
+  <script type="text/javascript" src="{% static 'plugins/js/highlight.min.js' %}"></script>
+  <script>
+    $('.martor-preview pre').each(function(i, block){
+        hljs.highlightBlock(block);
+    });
+  </script>
+{% endblock %}

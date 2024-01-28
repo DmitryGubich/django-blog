@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
+from martor.models import MartorField
 from taggit.managers import TaggableManager
 
 from blog.utils import validate_title
@@ -12,7 +12,7 @@ User = get_user_model()
 
 class Post(models.Model):
     title = models.CharField(validators=[validate_title], max_length=128, unique=True)
-    content = models.TextField()
+    content = MartorField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     slug = models.SlugField()
